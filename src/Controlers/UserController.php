@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use DatabaseDriver\DatabaseDriver;
+use DatabaseDriver\SQL\MySQLDriver;
 use JWTService\JWTService;
 use ResponseJSON\ResponseJSON;
 
@@ -11,7 +12,7 @@ class UserController
     private $db;
     private $jwtService;
 
-    public function __construct(DatabaseDriver $db, JWTService $jwtService)
+    public function __construct(MySQLDriver $db, JWTService $jwtService)
     {
         $this->db = $db;
         $this->jwtService = $jwtService;
@@ -24,16 +25,24 @@ class UserController
         $username = $data['username'] ?? '';
         $newPassword = $data['new_password'] ?? '';
 
-        if (!$this->jwtService->validateToken($username, $token)) {
+        // Validate token
+        $payload = $this->jwtService->validateToken($token, $username);
+
+        if (!$payload || $payload['username'] !== $username) {
             ResponseJSON::send([], 401, 'Unauthorized');
         }
 
+        // Hash new password
         $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
 
-        $query = "UPDATE users SET password = ? WHERE username = ?";
-        $this->db->execute($query, [$hashedPassword, $username]);
+        // Update password
+        $result = $this->db->update('users', ['password' => $hashedPassword], ['username' => $username]);
 
-        ResponseJSON::send([], 200, 'Account updated successfully');
+        if ($result) {
+            ResponseJSON::send([], 200, 'Account updated successfully');
+        } else {
+            ResponseJSON::send([], 500, 'Failed to update account');
+        }
     }
 
     public function updateInfo()
@@ -43,46 +52,59 @@ class UserController
         $userId = $data['user_id'] ?? '';
         $info = $data['info'] ?? '';
 
-        if (!$this->jwtService->validateToken($userId, $token)) {
+        // Validate token
+        $payload = $this->jwtService->validateToken($token);
+
+        if (!$payload || $payload['user_id'] !== $userId) {
             ResponseJSON::send([], 401, 'Unauthorized');
         }
 
-        $query = "UPDATE user_info SET info = ? WHERE user_id = ?";
-        $this->db->execute($query, [$info, $userId]);
+        // Update user info
+        $result = $this->db->update('user_info', ['info' => $info], ['user_id' => $userId]);
 
-        ResponseJSON::send([], 200, 'User info updated successfully');
+        if ($result) {
+            ResponseJSON::send([], 200, 'User info updated successfully');
+        } else {
+            ResponseJSON::send([], 500, 'Failed to update user info');
+        }
     }
 
     public function getUser()
     {
         $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-        $payload = $this->jwtService->validateToken('user123', $token); // Token validation should be improved
+        $payload = $this->jwtService->validateToken($token);
 
         if (!$payload) {
             ResponseJSON::send([], 401, 'Unauthorized');
         }
 
         $userId = $payload['user_id'];
-        $query = "SELECT * FROM users WHERE id = ?";
-        $user = $this->db->query($query, [$userId]);
+        $user = $this->db->read('users', ['id' => $userId]);
 
-        ResponseJSON::send($user, 200, 'User data retrieved successfully');
+        if ($user) {
+            ResponseJSON::send($user[0], 200, 'User data retrieved successfully');
+        } else {
+            ResponseJSON::send([], 404, 'User not found');
+        }
     }
 
     public function getInfo()
     {
         $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-        $payload = $this->jwtService->validateToken('user123', $token); // Token validation should be improved
+        $payload = $this->jwtService->validateToken($token);
 
         if (!$payload) {
             ResponseJSON::send([], 401, 'Unauthorized');
         }
 
         $userId = $payload['user_id'];
-        $query = "SELECT * FROM user_info WHERE user_id = ?";
-        $info = $this->db->query($query, [$userId]);
+        $info = $this->db->read('user_info', ['user_id' => $userId]);
 
-        ResponseJSON::send($info, 200, 'User info retrieved successfully');
+        if ($info) {
+            ResponseJSON::send($info[0], 200, 'User info retrieved successfully');
+        } else {
+            ResponseJSON::send([], 404, 'User info not found');
+        }
     }
 
     public function updateImage()
@@ -93,21 +115,31 @@ class UserController
 
         $image = $_FILES['image'];
         $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-        $payload = $this->jwtService->validateToken('user123', $token); // Token validation should be improved
+        $payload = $this->jwtService->validateToken($token);
 
         if (!$payload) {
             ResponseJSON::send([], 401, 'Unauthorized');
         }
 
         $userId = $payload['user_id'];
-
         $targetDir = __DIR__ . '/../uploads/';
         $targetFile = $targetDir . basename($image['name']);
 
+        // Ensure the uploads directory exists
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        // Move uploaded file
         if (move_uploaded_file($image['tmp_name'], $targetFile)) {
-            $query = "UPDATE user_info SET profile_image = ? WHERE user_id = ?";
-            $this->db->execute($query, [$targetFile, $userId]);
-            ResponseJSON::send([], 200, 'Profile image updated successfully');
+            // Update profile image path in database
+            $result = $this->db->update('user_info', ['profile_image' => $targetFile], ['user_id' => $userId]);
+
+            if ($result) {
+                ResponseJSON::send([], 200, 'Profile image updated successfully');
+            } else {
+                ResponseJSON::send([], 500, 'Failed to update profile image');
+            }
         } else {
             ResponseJSON::send([], 500, 'Failed to upload image');
         }

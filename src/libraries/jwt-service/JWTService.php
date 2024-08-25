@@ -45,9 +45,9 @@ class JWTService
         file_put_contents($filePath, json_encode($tokenData));
     }
 
-    public function validateToken($name, $token)
+    public function validateToken($token)
     {
-        $filePath = $this->getTokenFilePath($name);
+        $filePath = $this->getTokenFilePath($token);
         if (!file_exists($filePath)) {
             return false;
         }
@@ -59,7 +59,7 @@ class JWTService
 
         $decoded = $this->decodeJWT($token);
         if ($decoded === false || $tokenData['expiration'] < time()) {
-            $this->deleteToken($name);
+            $this->deleteToken($token);
             return false;
         }
 
