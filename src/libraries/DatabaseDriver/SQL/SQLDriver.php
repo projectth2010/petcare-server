@@ -62,6 +62,23 @@ abstract class SQLDriver extends DatabaseDriver
         return $this->connection->exec($query);
     }
 
+    /**
+     * Find a record by its ID.
+     * 
+     * @param string $table - The name of the table
+     * @param int|string $id - The ID of the record to find
+     * @param string $primaryKey - The name of the primary key column (default is 'id')
+     * @return array|false - The found record or false if not found
+     */
+    public function findById($table, $id, $primaryKey = 'id')
+    {
+        $query = "SELECT * FROM $table WHERE $primaryKey = :id LIMIT 1";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
     public function executeRawQuery($query, $params = [])
     {
         $stmt = $this->connection->prepare($query);
