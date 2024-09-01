@@ -2,39 +2,22 @@
 
 namespace Middleware;
 
-use JWTService\JWTService;
-use ResponseJSON\ResponseJSON;
+use Redirect\Redirect;
 
 class AuthMiddleware
 {
-    private $jwtService;
-
-    public function __construct(JWTService $jwtService)
+    public static function handle()
     {
-        $this->jwtService = $jwtService;
-    }
-
-    public function handle()
-    {
-        // Check if the Authorization header exists
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? '';
-
-        if (empty($authHeader)) {
-            ResponseJSON::send([], 401, 'Authorization header not found');
+        // Start session if not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
 
-        // Extract the token from the Authorization header (Bearer token)
-        $token = str_replace('Bearer ', '', $authHeader);
-
-        // Validate the token using JWTService
-        $isValid = $this->jwtService->validateToken($token);
-
-        if (!$isValid) {
-            ResponseJSON::send([], 401, 'Invalid or expired token');
+        // Check if the user is logged in (session variable exists)
+        if (!isset($_SESSION['user'])) {
+            // User is not logged in, redirect to the login page
+            Redirect::to('/admin/login');
+            exit;
         }
-
-        // If valid, the user is authenticated and can proceed
-        return true;
     }
 }
