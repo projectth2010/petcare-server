@@ -1,0 +1,395 @@
+
+
+    <%- include('../partials/header_meta', { title: 'Admin - Memberanswerquiz List' }) %>
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <%- include('../partials/navbar_admin_lte') %>
+    <%- include('../partials/aside_bar') %>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">List of Memberanswerquiz</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item active">Memberanswerquizs</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">Memberanswerquizs</h3>
+                  <div class="card-tools">
+                    <!-- <a href="#" class="btn btn-tool btn-sm">
+                      <i class="fas fa-download"></i>
+                    </a>
+                    <a href="#" class="btn btn-tool btn-sm">
+                      <i class="fas fa-bars"></i>
+                    </a> -->
+                  </div>
+                </div>
+                <div class="card-body table-responsive">
+                  <!-- Add button for popup -->
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberanswerquizModal">
+                  Add New Memberanswerquiz
+                  </button>
+
+                  <table id="memberanswerquizsTable" class="table table-striped table-valign-middle">
+                    <thead>
+                        
+                    <tr>
+                      <th>Memberanswerid</th><th>Quizid</th><th>Memberid</th><th>Ans</th><th>Correct</th> <td>Action</td>
+                    </tr>
+        
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div id="paginationContainer" class="d-flex justify-content-center mt-3"></div>
+            
+                </div>
+              </div>
+              <!-- /.card -->
+
+              <!-- Add the modal for adding a new member -->
+              <div class="modal fade" id="addMemberanswerquizModal" tabindex="-1" role="dialog" aria-labelledby="addMemberanswerquizModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addMemberModalLabel">Add New Memberanswerquiz</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Add form to input data -->
+                    <!-- Add form to input MemberAnswerQuiz data -->
+<form id="MemberAnswerQuizForm">
+  <input type="hidden" name="MemberAnswerID" id="MemberAnswerID" value="{/* Add value here if editing an existing record */}">
+  <div class="form-group">
+    <label for="QuizID">QuizID:</label>
+    <select class="form-control" id="QuizID" name="QuizID" required>
+      <option value="">-- Select QuizID --</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="MemberID">MemberID:</label>
+    <select class="form-control" id="MemberID" name="MemberID" required>
+      <option value="">-- Select MemberID --</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="Ans">Ans:</label>
+    <input type="text" class="form-control" id="Ans" name="Ans" required>
+  </div>
+  <div class="form-group">
+    <label for="Correct">Correct:</label>
+    <input type="text" class="form-control" id="Correct" name="Correct" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!-- /.popup modal -->
+
+
+            </div>
+            <!-- /.col-md-6 -->
+
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <%- include('../partials/software_version') %>
+  </div>
+  <!-- ./wrapper -->
+
+</body>
+<%- include('../partials/footer_admin_lte_script') %>
+      
+      <script>
+
+      // Function to show SweetAlert success message
+      function showSuccessMessage(message) {
+            Swal.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success',
+                timer: 1500
+            });
+        }
+
+        
+        $(document).ready(function() {
+        
+
+          $('#uploadBtn').on('click', function () {
+                uploadMemberanswerquizFile();
+              });
+
+          // call data for ref key.
+              $("#QuizID").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "/api/Quiz",
+          dataType: "json",
+          data: { query: request.term },
+          success: function(data) {
+            response(data);
+          }
+        });
+      }
+    });
+    $("#MemberID").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "/api/Member",
+          dataType: "json",
+          data: { query: request.term },
+          success: function(data) {
+            response(data);
+          }
+        });
+      }
+    });
+
+          //.end call data for ref key.
+
+          $('#dataTable').DataTable({ "ajax": "/api/memberanswerquiz", "columns": [{'data': 'MemberAnswerID'}
+, {'data': 'QuizID'}
+, {'data': 'MemberID'}
+, {'data': 'Ans'}
+, {'data': 'Correct'}
+] });
+          // Handle form submission for creating a new group
+          $('#MemberanswerquizForm').submit(function (event) {
+            event.preventDefault();
+
+            const MemberAnswerID = $('#MemberAnswerID').val()
+const QuizID = $('#QuizID').val()
+const MemberID = $('#MemberID').val()
+const Ans = $('#Ans').val()
+const Correct = $('#Correct').val()
+
+            const data = {
+                MemberAnswerID,QuizID,MemberID,Ans,Correct,
+            };
+
+            $.ajax({
+                url: '/api/v1/memberanswerquiz',
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                  showSuccessMessage("Memberanswerquiz created successfully");
+                  $('#addMemberanswerquizModal').modal('hide');
+                    // Refresh the table after successful deletion
+                    fetchMemberanswerquizs();
+                    clearMemberanswerquizForm();
+                },
+                error: function () {
+                    alert('Failed to create a new memberanswerquiz');
+                }
+            });
+        });
+
+        const apiUrl = '/api/v1/memberanswerquiz';
+
+        function fetchMemberanswerquizs(page = 1, limit = 10) {
+            const url = `${apiUrl}?page=${page}&limit=${limit}`;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    const res = response;
+                    const totalPages = 1; //  data doesn't have pagination, so totalPages is always 1.
+                    const currentPage = 1; //  data doesn't have pagination, so currentPage is always 1.
+
+                    // Clear table body
+                    $('#memberanswerquizsTable tbody').empty();
+
+                    // Populate table with group data
+                    res.forEach(function(itm) {
+                        const row = `<tr>
+                            <td>${itm.MemberAnswerID}</td><td>${itm.QuizID}</td><td>${itm.MemberID}</td><td>${itm.Ans}</td><td>${itm.Correct}</td>
+                            
+                            
+
+                            <td><a href="#" class="btn-warning btn btn-warning btn-sm" data-memberanswerquiz-id="${itm.MemberanswerquizID}">Edit</a> <a href="#" class="btn-delete btn btn-danger btn-sm" data-memberanswerquiz-id="${itm.MemberanswerquizID}">Delete</a></td>
+                        </tr>`;
+                        $('#memberanswerquizsTable tbody').append(row);
+                });
+
+                    // Render pagination buttons
+                    renderPaginationButtons(currentPage, totalPages);
+                },
+                error: function() {
+                    console.error('Failed to fetch memberanswerquizs data');
+                }
+            });
+        }
+
+        function renderPaginationButtons(currentPage, totalPages) {
+            const paginationContainer = $('#paginationContainer');
+            paginationContainer.empty();
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = `<button class="btn btn-link btn-pagination ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                paginationContainer.append(button);
+            }
+        }
+
+        fetchMemberanswerquizs();
+
+        // Handle pagination button clicks
+        $(document).on('click', '.btn-pagination', function() {
+            const page = $(this).data('page');
+            fetchMemberanswerquizs(page);
+        });
+
+        function deleteMemberanswerquiz(id) {
+            $.ajax({
+                url: `/api/v1/memberanswerquiz/${id}`,
+                method: 'DELETE',
+                success: function () {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The memberanswerquiz has been deleted successfully.',
+                        icon: 'success',
+                        timer: 1500
+                    }).then(() => {
+                        // Refresh the table after successful deletion
+                        fetchMemberanswerquizs();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to delete the memberanswerquiz.',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        // Event listener for the "Delete" button click
+        $(document).on('click', '.btn-delete', function () {
+            const dataId = $(this).data('memberanswerquiz-id');
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: 'Are you sure you want to delete this memberanswerquiz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteMemberanswerquiz(dataId);
+                }
+            });
+        });
+
+
+
+  });
+
+  
+
+  function clearMemberanswerquizForm() {
+    const form = $(`#MemberanswerquizForm`); 
+    const inputs = form.find("input, select, textarea");
+
+    inputs.each(function() {
+      const input = $(this);
+      const inputType = input.attr("type");
+
+      if (inputType === "text" || inputType === "password" || inputType === "date" || inputType === "file" || inputType === "datetime" || inputType === "number") {
+        input.val("");
+      } else if (inputType === "checkbox" || inputType === "radio") {
+        input.prop("checked", false);
+      } else if (input.is("select")) {
+        input.prop("selectedIndex", 0);
+      } else if (input.is("textarea")) {
+        input.val("");
+      }
+    });
+  }
+
+  
+  
+  
+  function updateActiveStatus(fac_id, active_status) {
+          // Show a confirmation alert using SweetAlert
+         const ActiveStatus = active_status == "No" ? 'Yes' : 'No';
+
+          Swal.fire({
+            title: 'Update Active Status?',
+            text: 'Are you sure you want to update the active status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const data = {
+                ActiveStatus,
+              };
+
+              const url = `/api/v1/memberanswerquiz/activestatus/${fac_id}`;
+              const method = 'PUT';
+
+              $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: function (response) {
+                  showSuccessMessage("Facility updated successfully");
+                  window.location.reload();
+                },
+                error: function () {
+                  alert('Failed to update active status');
+                }
+            });
+            }
+          });
+        }
+
+      </script>
+
+    <%- include('../partials/footer') %>
+    
