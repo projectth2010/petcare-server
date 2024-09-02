@@ -35,4 +35,72 @@ class ResponseJSON
         echo json_encode($response, JSON_PRETTY_PRINT);
         exit;
     }
+
+    /**
+     * Send a successful JSON response with data.
+     *
+     * @param array $data - Data to send in the response
+     * @param string $message - Optional success message
+     * @param int $statusCode - HTTP status code (default is 200)
+     * @return void
+     */
+    public static function success($data = [], $message = 'Request successful', $statusCode = 200)
+    {
+        // Set HTTP response header for JSON
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+
+        // Prepare the response structure
+        $response = [
+            'status' => 'success',
+            'message' => $message,
+            'data' => $data
+        ];
+
+        // Send the JSON response
+        echo json_encode($response);
+        exit;
+    }
+
+    /**
+     * Send an error JSON response.
+     *
+     * @param string $message - Error message
+     * @param int $statusCode - HTTP status code (default is 400)
+     * @return void
+     */
+    public static function error($message = 'An error occurred', $statusCode = 400)
+    {
+        // Set HTTP response header for JSON
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+
+        // Prepare the response structure
+        $response = [
+            'status' => 'error',
+            'message' => $message
+        ];
+
+        // Send the JSON response
+        echo json_encode($response);
+        exit;
+    }
+
+    /**
+     * Send a custom JSON response.
+     *
+     * @param array $response - Custom response structure
+     * @param int $statusCode - HTTP status code
+     * @return void
+     */
+    public static function custom($response = [], $statusCode = 200)
+    {
+        // Set HTTP response header for JSON
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+
+        // Send the custom JSON response
+        echo json_encode($response);
+        exit;
+    }
 }

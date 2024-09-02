@@ -93,18 +93,54 @@ abstract class SQLDriver extends DatabaseDriver
         $params = [];
         $whereClause = $this->buildWhereClause($filters, $params, "_");
 
+        $query = "SELECT * FROM $table";
+        if (trim($whereClause) != "") {
+            $query = "SELECT * FROM $table WHERE $whereClause";
+        }
 
-        $query = "SELECT * FROM $table WHERE $whereClause";
         if ($limit) {
             $query .= " LIMIT $limit";
         }
         if ($offset) {
             $query .= " OFFSET $offset";
         }
-
+        // print($query);
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Count rows in a table with optional filters.
+     *
+     * @param string $table - The table name.
+     * @param array $filters - Optional filters for counting rows.
+     * @return int - The count of rows.
+     */
+    public function count($table, $filters = [])
+    {
+        $params = [];
+        // Start building the query
+        $query = "SELECT COUNT(*) as count FROM `$table`";
+
+        // If filters are provided, add a WHERE clause
+        if (!empty($filters)) {
+            $whereClause = $this->buildWhereClause($filters, $params);
+            $query .= " WHERE $whereClause";
+        }
+
+        // Prepare and execute the query
+        $stmt = $this->connection->prepare($query);
+
+        // Extract filter values to bind to the query
+        //$params = $this->extractParams($filters);
+        $stmt->execute($params);
+
+        // Fetch the count result
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Return the count value
+        return $result['count'] ?? 0;
     }
 
     protected function buildWhereClause($filters, &$params, $prefix = '')

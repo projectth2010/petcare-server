@@ -19,12 +19,13 @@ require_once 'Middleware/AuthAPIMiddleware.php';
 // data models
 require_once 'Models/AdminModel.php';
 // require_once 'Models/MemberModel.php';
-// require_once 'Models/PetModel.php';
+require_once 'Models/PetModel.php';
 
 require_once 'Controllers/AuthController.php';
 require_once 'controllers/UserController.php';
 require_once 'controllers/WelcomeController.php';
 require_once 'controllers/AdminController.php';
+require_once 'controllers/PetController.php';
 
 
 use Router\Router;
@@ -32,6 +33,7 @@ use Controllers\AuthController;
 use Controllers\UserController;
 use Controllers\AdminController;
 use Controllers\WelcomeController;
+use Controllers\PetController;
 
 Middleware\AuthMiddleware::start();
 
@@ -47,14 +49,16 @@ EnvLoader\EnvLoader::load(__DIR__ . '/.env');
  */
 $router = new Router();
 /** mobile api */
-$router->map('GET', '/', [WelcomeController::class, 'index']);
-$router->map('POST', '/api/register', [AuthController::class, 'register']);
-$router->map('POST', '/api/login', [AuthController::class, 'login']);
-$router->map('PUT', '/api/update-account', [UserController::class, 'updateAccount']);
-$router->map('PUT', '/api/update-info', [UserController::class, 'updateInfo']);
-$router->map('GET', '/api/get-user', [UserController::class, 'getUser']);
-$router->map('GET', '/get-info', [UserController::class, 'getInfo']);
-$router->map('POST', '/update-image', [UserController::class, 'updateImage']);
+$router->map('GET', '/petcare/api/v1', [WelcomeController::class, 'index']);
+$router->map('POST', '/petcare/api/v1/register', [AuthController::class, 'register']);
+$router->map('POST', '/petcare/api/v1/login', [AuthController::class, 'login']);
+$router->map('PUT', '/petcare/api/v1/update-account', [UserController::class, 'updateAccount']);
+$router->map('PUT', '/petcare/api/v1/update-info', [UserController::class, 'updateInfo']);
+$router->map('GET', '/petcare/api/v1/get-user', [UserController::class, 'getUser']);
+$router->map('GET', '/petcare/api/v1/get-info', [UserController::class, 'getInfo']);
+$router->map('POST', '/petcare/api/v1/update-image', [UserController::class, 'updateImage']);
+
+$router->map('GET', '/petcare/api/v1/pets', [PetController::class, 'gets']);
 
 /** admin */
 $router->map('GET', '/petcare/admin/', [AdminController::class, 'index']);
@@ -64,23 +68,42 @@ $router->map('POST', '/petcare/admin/login', function () {
 });
 
 $router->map('GET', '/petcare/admin/dashboard', function () {
-
     Middleware\AuthMiddleware::handle();
     (new AdminController())->dashboard();
 });
 
 $router->map('GET', '/petcare/admin/logout', function () {
-
     (new AdminController())->logout();
 });
 
 /** admin level control system */
-$router->map('GET', '/petcare/admin/members', [AdminController::class, 'member']);
-$router->map('GET', '/petcare/admin/housemembers', [AdminController::class, 'housemembers']);
-$router->map('GET', '/petcare/admin/facilities', [AdminController::class, 'facilities']);
-$router->map('GET', '/petcare/admin/pets', [AdminController::class, 'pets']);
-$router->map('GET', '/petcare/admin/faqs', [AdminController::class, 'faqs']);
-$router->map('GET', '/petcare/admin/pets', [AdminController::class, 'pets']);
-$router->map('GET', '/petcare/admin/questionair', [AdminController::class, 'questionair']);
+$router->map('GET', '/petcare/admin/members', function () {
+    Middleware\AuthMiddleware::handle();
+    (new AdminController())->members();
+});
+$router->map('GET', '/petcare/admin/housemembers', function () {
+    Middleware\AuthMiddleware::handle();
+    (new AdminController())->housemembers();
+});
+$router->map('GET', '/petcare/admin/facilities', function () {
+    Middleware\AuthMiddleware::handle();
+    (new AdminController())->facilities();
+});
+$router->map(
+    'GET',
+    '/petcare/admin/pets',
+    function () {
+        Middleware\AuthMiddleware::handle();
+        (new AdminController())->pets();
+    }
+);
+$router->map('GET', '/petcare/admin/faqs', function () {
+    Middleware\AuthMiddleware::handle();
+    (new AdminController())->faqs();
+});
+$router->map('GET', '/petcare/admin/questionair', function () {
+    Middleware\AuthMiddleware::handle();
+    (new AdminController())->questionair();
+});
 
 $router->dispatch();

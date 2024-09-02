@@ -145,9 +145,10 @@ class AdminController
             $admin = Admin::getAdminByUsername($username, $password);
 
             if (is_array($admin) && count($admin) > 0) {
+
                 // Verify the password using bcrypt
                 // Set session for the logged-in user
-                $_SESSION['user'] = $admin['username'];
+                $_SESSION['user'] = $admin['Username'];
                 $_SESSION['user_level'] = $admin['level'];
 
                 // Redirect to dashboard
@@ -185,7 +186,7 @@ class AdminController
     /**
      * Display the Members page.
      */
-    public function member()
+    public function members()
     {
         $view = new View();
         // Fetch data or logic for members can be placed here
@@ -228,7 +229,7 @@ class AdminController
     {
         $view = new View();
         // Fetch data or logic for pets can be placed here
-        $view->render('admin/pets', [
+        $view->render('admin/pet', [
             'message' => 'Viewing Pets',
             'self' => $this // Pass dynamic menu
         ]);
