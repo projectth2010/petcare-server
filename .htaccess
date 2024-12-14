@@ -4,10 +4,10 @@ php_value upload_max_filesize 64M
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-   # RewriteBase /petcare/
+   # RewriteBase /
 
-    # Rewrite '/petcare/{anything}/{anything}' to '/{anything}/{anything}' without redirecting
-    # RewriteCond %{REQUEST_URI} ^/petcare/([^/]+)/([^/]+)$ [NC]
+    # Rewrite '/{anything}/{anything}' to '/{anything}/{anything}' without redirecting
+    # RewriteCond %{REQUEST_URI} ^/([^/]+)/([^/]+)$ [NC]
     # RewriteRule ^ /%1/%2 [L]
 
     # Redirect Trailing Slashes...
