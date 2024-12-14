@@ -16,29 +16,27 @@ abstract class SQLDriver extends DatabaseDriver
         // Enable PDO exceptions for better error handling
         $this->connection = new PDO($dsn, $user, $password);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        var_dump($this->connection);
     }
-
-
 
     public function create($table, $data)
     {
         $columns = implode(", ", array_keys($data));
         $placeholders = ":" . implode(", :", array_keys($data));
         $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+
+
         $stmt = $this->connection->prepare($query);
         return $stmt->execute($data);
     }
 
-
-
     public function update($table, $data, $filters = [])
     {
+        $params = [];
         try {
             $setClause = implode(", ", array_map(fn($key) => "$key = :$key", array_keys($data)));
             $query = "UPDATE $table SET $setClause";
             if (!empty($filters)) {
-                $whereClause = $this->buildWhereClause($filters);
+                $whereClause = $this->buildWhereClause($filters, $params);
                 $query .= " WHERE $whereClause";
             }
             $stmt = $this->connection->prepare($query);
@@ -51,10 +49,11 @@ abstract class SQLDriver extends DatabaseDriver
 
     public function delete($table, $filters = [])
     {
+        $params = [];
         try {
             $query = "DELETE FROM $table";
             if (!empty($filters)) {
-                $whereClause = $this->buildWhereClause($filters);
+                $whereClause = $this->buildWhereClause($filters, $params);
                 $query .= " WHERE $whereClause";
             }
             return $this->connection->exec($query);

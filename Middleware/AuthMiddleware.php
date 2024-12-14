@@ -24,7 +24,7 @@ class AuthMiddleware
         // Check if the user is logged in (session variable exists)
         if (!isset($_SESSION['user'])) {
             // User is not logged in, redirect to the login page
-            Redirect::to('/petcare/admin/login');
+            Redirect::to('/admin/login');
             exit;
         }
     }

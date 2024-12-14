@@ -48,4 +48,95 @@ class PetController
         // Send the response
         ResponseJSON::success($response);
     }
+
+    /**
+     * Create a new pet record.
+     *
+     * @return void
+     */
+    public function create()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($data['PetName']) || !isset($data['AccessStatus'])) {
+            ResponseJSON::error('Pet Name and Access Status are required.');
+            return;
+        }
+
+        $newPet = [
+            'PetName' => $data['PetName'],
+            'AccessStatus' => $data['AccessStatus'],
+            'Description' => $data['Description'] ?? null,
+            'PetID' => $data['PetID'] ?? null
+        ];
+
+        if (Pet::create($newPet)) {
+            ResponseJSON::success($newPet, 'Pet created successfully.');
+        } else {
+            ResponseJSON::error('Failed to create pet.');
+        }
+    }
+
+    /**
+     * Fetch a single pet by ID.
+     *
+     * @param int $id - ID of the pet to fetch
+     * @return void
+     */
+    public function get($id)
+    {
+        $pet = Pet::getPetById($id);
+
+        if ($pet) {
+            ResponseJSON::success($pet);
+        } else {
+            ResponseJSON::error('Pet not found.', 404);
+        }
+    }
+
+    /**
+     * Update a pet record by ID.
+     *
+     * @param int $id - ID of the pet to update
+     * @return void
+     */
+    public function update($id)
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $pet = Pet::getPetById($id);
+
+        if (!$pet) {
+            ResponseJSON::error('Pet not found.', 404);
+            return;
+        }
+
+        $updatedPet = [
+            'name' => $data['name'] ?? $pet['name'],
+            'species' => $data['species'] ?? $pet['species'],
+            'age' => $data['age'] ?? $pet['age'],
+            'owner' => $data['owner'] ?? $pet['owner']
+        ];
+
+        if (Pet::update($id, $updatedPet)) {
+            ResponseJSON::success($updatedPet, 'Pet updated successfully.');
+        } else {
+            ResponseJSON::error('Failed to update pet.');
+        }
+    }
+
+    /**
+     * Delete a pet by ID.
+     *
+     * @param int $id - ID of the pet to delete
+     * @return void
+     */
+    public function delete($id)
+    {
+        if (Pet::delete($id)) {
+            ResponseJSON::success([], 'Pet deleted successfully.');
+        } else {
+            ResponseJSON::error('Failed to delete pet.', 500);
+        }
+    }
 }

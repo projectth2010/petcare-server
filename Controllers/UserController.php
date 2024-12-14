@@ -2,10 +2,15 @@
 
 namespace Controllers;
 
-use DatabaseDriver\DatabaseDriver;
+use DatabaseDriver\Core\DatabaseDriver;
 use DatabaseDriver\SQL\MySQLDriver;
 use JWTService\JWTService;
 use ResponseJSON\ResponseJSON;
+
+
+use DatabaseDriver\Model\Admin;
+use DatabaseDriver\Model\Pet;
+use DatabaseDriver\Model\Member;
 
 class UserController
 {

@@ -11,13 +11,10 @@ use DatabaseDriver\Model\Admin;
 use DatabaseDriver\Model\Pet;
 use DatabaseDriver\Model\Member;
 
+use Session\SessionManager;
+
 class AdminController
 {
-
-    private $validUsername = 'admin';
-    private $validPassword = 'password';
-    private $level = 9;
-
 
     /**
      * Generate dynamic menu for the sidebar.
@@ -127,7 +124,7 @@ class AdminController
         AuthMiddleware::handle();
 
         // Render the dashboard or other views
-        Redirect::to('/petcare/admin/dashboard');
+        Redirect::to('/admin/dashboard');
     }
 
     public function login()
@@ -152,7 +149,7 @@ class AdminController
                 $_SESSION['user_level'] = $admin['level'];
 
                 // Redirect to dashboard
-                Redirect::to('/petcare/admin/dashboard');
+                Redirect::to('/admin/dashboard');
             } else {
                 // Invalid username
                 $error = 'Invalid username.';
@@ -180,7 +177,7 @@ class AdminController
         session_destroy();
 
         // Redirect to login page
-        Redirect::to('/petcare/admin/login');
+        Redirect::to('/admin/login');
     }
 
     /**

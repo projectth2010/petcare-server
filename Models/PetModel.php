@@ -6,25 +6,12 @@ use DatabaseDriver\SQL\MySQLDriver;
 
 class Pet extends BaseModel
 {
-    // protected static $db;
 
-    public function __construct(MySQLDriver $db)
-    {
-        parent::__construct($db, 'pet');  // 'Pet' is the table name
-    }
 
-    // Initialize the database connection
-    public static function init()
+    public static function create($data)
     {
-        if (!self::$db) {
-            // Initialize the MySQLDriver with environment variables
-            self::$db = new MySQLDriver(
-                getenv('DB_HOST'),
-                getenv('DB_DATABASE'),
-                getenv('DB_USERNAME'),
-                getenv('DB_PASSWORD')
-            );
-        }
+        self::init();
+        return self::$db->create('pets', $data);
     }
 
     /**
@@ -33,7 +20,7 @@ class Pet extends BaseModel
      * @param int $id
      * @return array|null
      */
-    public static function getPetById($id)
+    public static function getById($id)
     {
         self::init();
         // Build the filter for searching by pet ID
@@ -53,7 +40,7 @@ class Pet extends BaseModel
      * @param int $offset
      * @return array
      */
-    public static function getAllPets($filters = [], $limit = 100, $offset = 0)
+    public static function getAll($filters = [], $limit = 100, $offset = 0)
     {
         self::init();
         // Fetch all pets with optional filters
@@ -116,8 +103,7 @@ class Pet extends BaseModel
         self::init();
         $filters = [
             '$or' => [
-                ['name' => ['LIKE' => '%' . $searchValue . '%']],
-                ['breed' => ['LIKE' => '%' . $searchValue . '%']]
+                ['PetName' => ['LIKE' => '%' . $searchValue . '%']]
             ]
         ];
         return self::$db->read('pet', $filters, $length, $start); // Apply filters and pagination

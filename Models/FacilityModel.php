@@ -4,14 +4,14 @@ namespace DatabaseDriver\Model;
 
 use DatabaseDriver\SQL\MySQLDriver;
 
-class Member extends BaseModel
+class Facility extends BaseModel
 {
-    
-    
+
+
     public static function create($data)
     {
         self::init();
-        return self::$db->create('member', $data);
+        return self::$db->create('pets', $data);
     }
 
     /**
@@ -26,7 +26,7 @@ class Member extends BaseModel
         // Build the filter for searching by pet ID
         $filters = ['id' => $id];
         // Use the SQLDriver's `read` method to query the pet by ID
-        $result = self::$db->read('member', $filters, 1);  // Assuming 'pets' is your table name
+        $result = self::$db->read('pet', $filters, 1);  // Assuming 'pets' is your table name
 
         // Return the first match or null if not found
         return $result ? $result[0] : null;
@@ -44,7 +44,7 @@ class Member extends BaseModel
     {
         self::init();
         // Fetch all pets with optional filters
-        return self::$db->read('member', $filters, $limit, $offset);
+        return self::$db->read('pet', $filters, $limit, $offset);
     }
 
 
@@ -56,7 +56,7 @@ class Member extends BaseModel
     public static function countAll()
     {
         self::init();
-        return self::$db->count('member'); // Assuming your database driver has a `count` method
+        return self::$db->count('pet'); // Assuming your database driver has a `count` method
     }
 
     /**
@@ -74,7 +74,7 @@ class Member extends BaseModel
                 ['breed' => ['LIKE' => '%' . $searchValue . '%']]
             ]
         ];
-        return self::$db->count('member', $filters);
+        return self::$db->count('pet', $filters);
     }
 
     /**
@@ -87,7 +87,7 @@ class Member extends BaseModel
     public static function getAllPaginated($start, $length)
     {
         self::init();
-        return self::$db->read('member', [], $length, $start); // No filters, just pagination
+        return self::$db->read('pet', [], $length, $start); // No filters, just pagination
     }
 
     /**
@@ -106,6 +106,6 @@ class Member extends BaseModel
                 ['PetName' => ['LIKE' => '%' . $searchValue . '%']]
             ]
         ];
-        return self::$db->read('member', $filters, $length, $start); // Apply filters and pagination
+        return self::$db->read('pet', $filters, $length, $start); // Apply filters and pagination
     }
 }
