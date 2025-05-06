@@ -3,13 +3,13 @@
 include_once('./views/admin/_part/header_meta.php'); ?>
 
 <body class="hold-transition sidebar-mini">
-  <div class="wrapper">
+    <div class="wrapper">
 
-    <?php
-    include_once('./views/admin/_part/navbar_admin_lte.php');
-    include_once('./views/admin/_part/aside_bar.php'); ?>
+        <?php
+        include_once('./views/admin/_part/navbar_admin_lte.php');
+        include_once('./views/admin/_part/aside_bar.php'); ?>
 
-    <!-- Content Wrapper. Contains page content -->
+        <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
       <div class="content-header">
@@ -50,70 +50,65 @@ include_once('./views/admin/_part/header_meta.php'); ?>
                 <div class="card-body table-responsive">
                   <!-- Add button for popup -->
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFacilityModal">
-                    Add New Facility
+                  Add New Facility
                   </button>
 
                   <table id="facilitysTable" class="table table-striped table-valign-middle">
                     <thead>
-
-                      <tr>
-                        <th>Facilityid</th>
-                        <th>Facilityname</th>
-                        <th>Iconuri</th>
-                        <th>Description</th>
-                        <th>Approvestatus</th>
-                        <td>Action</td>
-                      </tr>
-
+                        
+                    <tr>
+                      <th>Facilityid</th><th>Facilityname</th><th>Iconuri</th><th>Description</th><th>Approvestatus</th> <td>Action</td>
+                    </tr>
+        
                     </thead>
                     <tbody>
 
                     </tbody>
-                  </table>
-                  <div id="paginationContainer" class="d-flex justify-content-center mt-3"></div>
-
+                </table>
+                <div id="paginationContainer" class="d-flex justify-content-center mt-3"></div>
+            
                 </div>
               </div>
               <!-- /.card -->
 
               <!-- Add the modal for adding a new member -->
               <div class="modal fade" id="addFacilityModal" tabindex="-1" role="dialog" aria-labelledby="addFacilityModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="addMemberModalLabel">Add New Facility</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <!-- Add form to input data -->
-                      <!-- Add form to input Facility data -->
-                      <form id="FacilityForm">
-                        <input type="hidden" name="FacilityID" id="FacilityID" value="{/* Add value here if editing an existing record */}">
-                        <div class="form-group">
-                          <label for="FacilityName">FacilityName:</label>
-                          <input type="text" class="form-control" id="FacilityName" name="FacilityName" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="IconUri">IconUri:</label>
-                          <input type="text" class="form-control" id="IconUri" name="IconUri" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="Description">Description:</label>
-                          <input type="text" class="form-control" id="Description" name="Description" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="ApproveStatus">ApproveStatus:</label>
-                          <input type="text" class="form-control" id="ApproveStatus" name="ApproveStatus" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                      </form>
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addMemberModalLabel">Add New Facility</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Add form to input data -->
+                    <!-- Add form to input Facility data -->
+                    <form id="FacilityForm">
+                      <input type="hidden" name="FacilityID" id="FacilityID" value="{/* Add value here if editing an existing record */}">
+                      <div class="form-group">
+                        <label for="FacilityName">FacilityName:</label>
+                        <input type="text" class="form-control" id="FacilityName" name="FacilityName" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="IconUri">IconUri:</label>
+                        <input type="text" class="form-control" id="IconUri" name="IconUri" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="Description">Description:</label>
+                        <input type="text" class="form-control" id="Description" name="Description" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="ApproveStatus">ApproveStatus:</label>
+                        <input type="text" class="form-control" id="ApproveStatus" name="ApproveStatus" required>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
 
-                    </div>
                   </div>
                 </div>
+              </div>
               </div>
               <!-- /.popup modal -->
 
@@ -136,189 +131,178 @@ include_once('./views/admin/_part/header_meta.php'); ?>
     </aside>
     <!-- /.control-sidebar -->
 
-    <?php include_once('./views/admin/_part/software_version.php'); ?>
-  </div>
-  <!-- ./wrapper -->
+        <?php include_once('./views/admin/_part/software_version.php'); ?>
+    </div>
+    <!-- ./wrapper -->
 
 </body>
 <?php include_once('./views/admin/_part/footer_admin_lte_script.php'); ?>
 
 <script>
-  // Function to show SweetAlert success message
-  function showSuccessMessage(message) {
-    Swal.fire({
-      title: 'Success!',
-      text: message,
-      icon: 'success',
-      timer: 1500
-    });
-  }
 
-
-  $(document).ready(function() {
-
-
-    $('#uploadBtn').on('click', function() {
-      uploadFacilityFile();
-    });
-
-    // call data for ref key.
-
-    //.end call data for ref key.
-
-    $('#dataTable').DataTable({
-      "ajax": "/api/v1/facility",
-      "columns": [{
-        'data': 'FacilityID'
-      }, {
-        'data': 'FacilityName'
-      }, {
-        'data': 'IconUri'
-      }, {
-        'data': 'Description'
-      }, {
-        'data': 'ApproveStatus'
-      }]
-    });
-    // Handle form submission for creating a new group
-    $('#FacilityForm').submit(function(event) {
-      event.preventDefault();
-
-      const FacilityID = $('#FacilityID').val()
-      const FacilityName = $('#FacilityName').val()
-      const IconUri = $('#IconUri').val()
-      const Description = $('#Description').val()
-      const ApproveStatus = $('#ApproveStatus').val()
-
-      const data = {
-        FacilityID,
-        FacilityName,
-        IconUri,
-        Description,
-        ApproveStatus,
-      };
-
-      $.ajax({
-        url: '/api/v1/facility',
-        method: 'POST',
-        data: data,
-        success: function(response) {
-          showSuccessMessage("Facility created successfully");
-          $('#addFacilityModal').modal('hide');
-          // Refresh the table after successful deletion
-          fetchFacilitys();
-          clearFacilityForm();
-        },
-        error: function() {
-          alert('Failed to create a new facility');
+      // Function to show SweetAlert success message
+      function showSuccessMessage(message) {
+            Swal.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success',
+                timer: 1500
+            });
         }
-      });
-    });
 
-    const apiUrl = '/api/v1/facility';
+        
+        $(document).ready(function() {
+        
 
-    function fetchFacilitys(page = 1, limit = 10) {
-      const url = `${apiUrl}?page=${page}&limit=${limit}`;
+          $('#uploadBtn').on('click', function () {
+                uploadFacilityFile();
+              });
 
-      $.ajax({
-        url: url,
-        method: 'GET',
-        success: function(response) {
-          const res = response;
-          const totalPages = 1; //  data doesn't have pagination, so totalPages is always 1.
-          const currentPage = 1; //  data doesn't have pagination, so currentPage is always 1.
+          // call data for ref key.
+          
+          //.end call data for ref key.
 
-          // Clear table body
-          $('#facilitysTable tbody').empty();
+          $('#dataTable').DataTable({ "ajax": "/petcare/api/v1/facility", "columns": [{'data': 'FacilityID'}
+            , {'data': 'FacilityName'}
+            , {'data': 'IconUri'}
+            , {'data': 'Description'}
+            , {'data': 'ApproveStatus'}
+            ] });
+          // Handle form submission for creating a new group
+          $('#FacilityForm').submit(function (event) {
+            event.preventDefault();
 
-          // Populate table with group data
-          res.forEach(function(itm) {
-            const row = `<tr>
+            const FacilityID = $('#FacilityID').val()
+            const FacilityName = $('#FacilityName').val()
+            const IconUri = $('#IconUri').val()
+            const Description = $('#Description').val()
+            const ApproveStatus = $('#ApproveStatus').val()
+
+            const data = {
+                FacilityID,FacilityName,IconUri,Description,ApproveStatus,
+            };
+
+            $.ajax({
+                url: '/petcare/api/v1/facility',
+                method: 'POST',
+                data: data,
+                success: function (response) {
+                  showSuccessMessage("Facility created successfully");
+                  $('#addFacilityModal').modal('hide');
+                    // Refresh the table after successful deletion
+                    fetchFacilitys();
+                    clearFacilityForm();
+                },
+                error: function () {
+                    alert('Failed to create a new facility');
+                }
+            });
+        });
+
+        const apiUrl = '/petcare/api/v1/facility';
+
+        function fetchFacilitys(page = 1, limit = 10) {
+            const url = `${apiUrl}?page=${page}&limit=${limit}`;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    const res = response;
+                    const totalPages = 1; //  data doesn't have pagination, so totalPages is always 1.
+                    const currentPage = 1; //  data doesn't have pagination, so currentPage is always 1.
+
+                    // Clear table body
+                    $('#facilitysTable tbody').empty();
+
+                    // Populate table with group data
+                    res.forEach(function(itm) {
+                        const row = `<tr>
                             <td>${itm.FacilityID}</td><td>${itm.FacilityName}</td><td>${itm.IconUri}</td><td>${itm.Description}</td><td>${itm.ApproveStatus}</td>
                             <td><a href="#" class="btn-warning btn btn-warning btn-sm" data-facility-id="${itm.FacilityID}">Edit</a> <a href="#" class="btn-delete btn btn-danger btn-sm" data-facility-id="${itm.FacilityID}">Delete</a></td>
                         </tr>`;
-            $('#facilitysTable tbody').append(row);
-          });
+                        $('#facilitysTable tbody').append(row);
+                });
 
-          // Render pagination buttons
-          renderPaginationButtons(currentPage, totalPages);
-        },
-        error: function() {
-          console.error('Failed to fetch facilitys data');
+                    // Render pagination buttons
+                    renderPaginationButtons(currentPage, totalPages);
+                },
+                error: function() {
+                    console.error('Failed to fetch facilitys data');
+                }
+            });
         }
-      });
-    }
 
-    function renderPaginationButtons(currentPage, totalPages) {
-      const paginationContainer = $('#paginationContainer');
-      paginationContainer.empty();
+        function renderPaginationButtons(currentPage, totalPages) {
+            const paginationContainer = $('#paginationContainer');
+            paginationContainer.empty();
 
-      for (let i = 1; i <= totalPages; i++) {
-        const button = `<button class="btn btn-link btn-pagination ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
-        paginationContainer.append(button);
-      }
-    }
-
-    fetchFacilitys();
-
-    // Handle pagination button clicks
-    $(document).on('click', '.btn-pagination', function() {
-      const page = $(this).data('page');
-      fetchFacilitys(page);
-    });
-
-    function deleteFacility(id) {
-      $.ajax({
-        url: `/api/v1/facility/${id}`,
-        method: 'DELETE',
-        success: function() {
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'The facility has been deleted successfully.',
-            icon: 'success',
-            timer: 1500
-          }).then(() => {
-            // Refresh the table after successful deletion
-            fetchFacilitys();
-          });
-        },
-        error: function() {
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to delete the facility.',
-            icon: 'error'
-          });
+            for (let i = 1; i <= totalPages; i++) {
+                const button = `<button class="btn btn-link btn-pagination ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                paginationContainer.append(button);
+            }
         }
-      });
-    }
 
-    // Event listener for the "Delete" button click
-    $(document).on('click', '.btn-delete', function() {
-      const dataId = $(this).data('facility-id');
-      Swal.fire({
-        title: 'Confirm Delete',
-        text: 'Are you sure you want to delete this facility?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteFacility(dataId);
+        fetchFacilitys();
+
+        // Handle pagination button clicks
+        $(document).on('click', '.btn-pagination', function() {
+            const page = $(this).data('page');
+            fetchFacilitys(page);
+        });
+
+        function deleteFacility(id) {
+            $.ajax({
+                url: `/petcare/api/v1/facility/${id}`,
+                method: 'DELETE',
+                success: function () {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'The facility has been deleted successfully.',
+                        icon: 'success',
+                        timer: 1500
+                    }).then(() => {
+                        // Refresh the table after successful deletion
+                        fetchFacilitys();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to delete the facility.',
+                        icon: 'error'
+                    });
+                }
+            });
         }
-      });
-    });
+
+        // Event listener for the "Delete" button click
+        $(document).on('click', '.btn-delete', function () {
+            const dataId = $(this).data('facility-id');
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: 'Are you sure you want to delete this facility?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteFacility(dataId);
+                }
+            });
+        });
 
 
 
   });
 
-
+  
 
   function clearFacilityForm() {
-    const form = $(`#FacilityForm`);
+    const form = $(`#FacilityForm`); 
     const inputs = form.find("input, select, textarea");
 
     inputs.each(function() {
@@ -337,46 +321,47 @@ include_once('./views/admin/_part/header_meta.php'); ?>
     });
   }
 
-
-
-
+  
+  
+  
   function updateActiveStatus(fac_id, active_status) {
-    // Show a confirmation alert using SweetAlert
-    const ActiveStatus = active_status == "No" ? 'Yes' : 'No';
+          // Show a confirmation alert using SweetAlert
+         const ActiveStatus = active_status == "No" ? 'Yes' : 'No';
 
-    Swal.fire({
-      title: 'Update Active Status?',
-      text: 'Are you sure you want to update the active status?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, update it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const data = {
-          ActiveStatus,
-        };
+          Swal.fire({
+            title: 'Update Active Status?',
+            text: 'Are you sure you want to update the active status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update it!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const data = {
+                ActiveStatus,
+              };
 
-        const url = `/api/v1/facility/activestatus/${fac_id}`;
-        const method = 'PUT';
+              const url = `/api/v1/facility/activestatus/${fac_id}`;
+              const method = 'PUT';
 
-        $.ajax({
-          url: url,
-          method: method,
-          data: data,
-          success: function(response) {
-            showSuccessMessage("Facility updated successfully");
-            window.location.reload();
-          },
-          error: function() {
-            alert('Failed to update active status');
-          }
-        });
-      }
-    });
-  }
-</script>
+              $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                success: function (response) {
+                  showSuccessMessage("Facility updated successfully");
+                  window.location.reload();
+                },
+                error: function () {
+                  alert('Failed to update active status');
+                }
+            });
+            }
+          });
+        }
+
+      </script>
 
 <?php
 include_once('./views/admin/_part/footer.php'); ?>

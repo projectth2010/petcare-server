@@ -155,7 +155,7 @@ include_once('./views/admin/_part/header_meta.php'); ?>
         //.end call data for ref key.
 
         $('#dataTable').DataTable({
-            "ajax": "api/v1/pet",
+            "ajax": "petcare/api/v1/pet",
             "columns": [{
                 'data': 'PetID'
             }, {
@@ -184,7 +184,7 @@ include_once('./views/admin/_part/header_meta.php'); ?>
             console.info(data);
 
             $.ajax({
-                url: '/api/v1/pets',
+                url: '/petcare/api/v1/pets',
                 method: 'POST',
                 contentType: "application/json", // Sending as JSON
                 data: JSON.stringify(data), // Convert the JS object to a JSON string
@@ -202,7 +202,7 @@ include_once('./views/admin/_part/header_meta.php'); ?>
             });
         });
 
-        const apiUrl = '/api/v1/pets';
+        const apiUrl = '/petcare/api/v1/pets';
 
         function fetchPets(page = 1, limit = 10) {
             const url = `${apiUrl}?page=${page}&limit=${limit}`;
@@ -256,7 +256,7 @@ include_once('./views/admin/_part/header_meta.php'); ?>
 
         function deletePet(id) {
             $.ajax({
-                url: `/api/v1/pet/${id}`,
+                url: `/petcare/api/v1/pet/${id}`,
                 method: 'DELETE',
                 success: function() {
                     Swal.fire({
@@ -342,7 +342,7 @@ include_once('./views/admin/_part/header_meta.php'); ?>
                     ActiveStatus,
                 };
 
-                const url = `/api/v1/pet/activestatus/${fac_id}`;
+                const url = `/petcare/api/v1/pet/activestatus/${fac_id}`;
                 const method = 'PUT';
 
                 $.ajax({

@@ -26,10 +26,10 @@ class AuthController
     public function register()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $username = $data['username'] ?? '';
+        $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
 
-        if (empty($username) || empty($password)) {
+        if (empty($email) || empty($password)) {
             ResponseJSON::send([], 400, 'Username and password are required');
         }
 
@@ -37,8 +37,8 @@ class AuthController
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         // Save user to database using the create method
-        $result = $this->db->create('users', [
-            'username' => $username,
+        $result = $this->db->create('customer', [
+            'email' => $email,
             'password' => $hashedPassword
         ]);
 
@@ -52,16 +52,16 @@ class AuthController
     public function login()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $username = $data['username'] ?? '';
+        $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
 
-        if (empty($username) || empty($password)) {
+        if (empty($email) || empty($password)) {
             ResponseJSON::send([], 400, 'Username and password are required');
         }
 
         // Retrieve user from database using the read method
-        $filters = ['username' => $username];
-        $user = $this->db->read('users', $filters);
+        $filters = ['email' => $email];
+        $user = $this->db->read('customer', $filters);
 
         if (empty($user)) {
             ResponseJSON::send([], 401, 'Invalid credentials');
@@ -75,7 +75,7 @@ class AuthController
 
         // Create token
         $payload = ['user_id' => $user['id']];
-        $token = $this->jwtService->createToken($username, $payload);
+        $token = $this->jwtService->createToken($email, $payload);
 
         ResponseJSON::send(['token' => $token], 200, 'Login successful');
     }
